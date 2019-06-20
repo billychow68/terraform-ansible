@@ -20,7 +20,7 @@ resource "aws_s3_bucket" "bucket1" {
 # EC2 resource: instance1
 #####################################################################
 resource "aws_instance" "instance1" {
-  ami           = "ami-b374d5a5"
+  ami           = var.amis[var.region]
   instance_type = "t2.micro"
   key_name      = "ec2-key-pair"
   tags = {
@@ -45,7 +45,7 @@ resource "aws_eip" "eip1" {
 # EC2 resource: instance2
 #####################################################################
 resource "aws_instance" "instance2" {
-  ami           = "ami-b374d5a5"
+  ami           = var.amis[var.region]
   instance_type = "t2.micro"
   key_name      = "ec2-key-pair"
   tags = {
