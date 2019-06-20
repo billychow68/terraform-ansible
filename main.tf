@@ -6,8 +6,9 @@ provider "aws" {
   profile = "default"
   region  = "us-east-1"
 }
-
-# S3 resource: EXAMPLE
+#####################################################################
+# S3 Bucket
+#####################################################################
 resource "aws_s3_bucket" "bucket1" {
   bucket  = "billychow68-bucket1"
   acl     = "private"
@@ -15,8 +16,9 @@ resource "aws_s3_bucket" "bucket1" {
     Name = "billychow68-bucket1"
   }
 }
-
+#####################################################################
 # EC2 resource: instance1
+#####################################################################
 resource "aws_instance" "instance1" {
   ami           = "ami-b374d5a5"
   instance_type = "t2.micro"
@@ -39,7 +41,9 @@ resource "aws_eip" "eip1" {
   }
 }
 
+#####################################################################
 # EC2 resource: instance2
+#####################################################################
 resource "aws_instance" "instance2" {
   ami           = "ami-b374d5a5"
   instance_type = "t2.micro"
@@ -60,7 +64,9 @@ resource "aws_eip" "eip2" {
   }
 }
 
+#####################################################################
 # resource: security group
+#####################################################################
 resource "aws_security_group" "training" {
   name        = "training"
 
