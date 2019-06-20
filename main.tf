@@ -29,13 +29,13 @@ resource "aws_instance" "instance1" {
   security_groups  = ["${aws_security_group.training.name}"]
   # explicit dependency
   depends_on    = [aws_s3_bucket.bucket1]
-  provisioner "local-exec" {
-    command = "echo ${aws_instance.instance1.public_ip} >> ip_address.txt"
-  }
 }
 resource "aws_eip" "eip1" {
   # implicit dependency on EIP
   instance = aws_instance.instance1.id
+  provisioner "local-exec" {
+    command = "echo ${aws_eip.eip1.tags.Name} ${aws_eip.eip1.public_ip} >> ip_address.txt"
+  }
   tags = {
     Name = "eip1"
   }
@@ -52,13 +52,13 @@ resource "aws_instance" "instance2" {
     Name = "instance2"
   }
   security_groups  = ["${aws_security_group.training.name}"]
-  provisioner "local-exec" {
-    command = "echo ${aws_instance.instance2.public_ip} >> ip_address.txt"
-  }
 }
 resource "aws_eip" "eip2" {
   # implicit dependency on EIP
   instance = aws_instance.instance2.id
+  provisioner "local-exec" {
+    command = "echo ${aws_eip.eip2.tags.Name} ${aws_eip.eip2.public_ip} >> ip_address.txt"
+  }
   tags = {
     Name = "eip2"
   }
@@ -69,11 +69,19 @@ resource "aws_eip" "eip2" {
 #####################################################################
 resource "aws_security_group" "training" {
   name        = "training"
-
   ingress {
     from_port     = 22
     to_port       = 22
-    protocol      = "ssh"
+    protocol      = "tcp"
     cidr_blocks   = ["0.0.0.0/0"]
+  }
+  egress {
+    from_port     = 0
+    to_port       = 0
+    protocol      = "-1"
+    cidr_blocks   = ["0.0.0.0/0"]
+  }
+  tags = {
+    Name = "training"
   }
 }
