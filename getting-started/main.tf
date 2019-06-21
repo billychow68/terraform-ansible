@@ -34,7 +34,7 @@ resource "aws_eip" "eip1" {
   # implicit dependency on EIP
   instance = aws_instance.instance1.id
   provisioner "local-exec" {
-    command = "echo ${aws_eip.eip1.tags.Name}: ssh -i ~/.ssh/ec2-key-pair.pem ubuntu@ ${aws_eip.eip1.public_ip} >> ip_address.txt"
+    command = "echo ${aws_eip.eip1.tags.Name}: ssh -i ~/.ssh/ec2-key-pair.pem ubuntu@${aws_eip.eip1.public_ip} >> ip_address.txt"
   }
   tags = {
     Name = "eip1"
