@@ -34,7 +34,7 @@ resource "aws_eip" "eip1" {
   # implicit dependency on EIP
   instance = aws_instance.instance1.id
   provisioner "local-exec" {
-    command = "echo ${aws_eip.eip1.tags.Name} ${aws_eip.eip1.public_ip} >> ip_address.txt"
+    command = "echo ${aws_eip.eip1.tags.Name}: ssh -i ~/.ssh/ec2-key-pair.pem ubuntu@ ${aws_eip.eip1.public_ip} >> ip_address.txt"
   }
   tags = {
     Name = "eip1"
@@ -57,7 +57,7 @@ resource "aws_eip" "eip2" {
   # implicit dependency on EIP
   instance = aws_instance.instance2.id
   provisioner "local-exec" {
-    command = "echo ${aws_eip.eip2.tags.Name} ${aws_eip.eip2.public_ip} >> ip_address.txt"
+    command = "echo ${aws_eip.eip2.tags.Name}: ssh -i ~/.ssh/ec2-key-pair.pem ubuntu@${aws_eip.eip2.public_ip} >> ip_address.txt"
   }
   tags = {
     Name = "eip2"
@@ -84,4 +84,14 @@ resource "aws_security_group" "training" {
   tags = {
     Name = "training"
   }
+}
+
+#####################################################################
+# outputs
+#####################################################################
+output "eip1" {
+  value = aws_eip.eip1.public_ip
+}
+output "eip2" {
+  value = aws_eip.eip2.public_ip
 }
