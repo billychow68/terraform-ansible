@@ -95,3 +95,9 @@ output "eip1" {
 output "eip2" {
   value = aws_eip.eip2.public_ip
 }
+output "s3_bucket" {
+  value = aws_s3_bucket.bucket1.tags.Name
+}
+output "security_group" {
+  value = aws_security_group.training.tags.Name
+}
