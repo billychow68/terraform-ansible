@@ -10,3 +10,7 @@ variable "amis" {
     "us-west-2" = "ami-4b32be2b"
   }
 }
+
+variable "ssh_port" {
+  default = "22"
+}
