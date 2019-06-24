@@ -101,7 +101,7 @@ resource "aws_launch_configuration" "ubuntu" {
               echo "Hello, World" > index.html
               nohup busybox httpd -f -p 8080 &
               EOF
-  security_groups  = ["${aws_security_group.training.name}"]
+  security_groups  = ["${aws_security_group.training-app.name}"]
   #vpc_security_group_ids = ["${aws_security_group.training.id}"]
   # explicit dependency
   depends_on    = [aws_s3_bucket.bucket1]
@@ -113,7 +113,7 @@ resource "aws_launch_configuration" "ubuntu" {
 # resource: security group for EC2 instances
 # ---------------------------------------------------------------------------------------------------------------------
 resource "aws_security_group" "training-app" {
-  name        = "training"
+  name        = "training-app"
   ingress {
     from_port     = "${var.ssh_port}"
     to_port       = "${var.ssh_port}"
