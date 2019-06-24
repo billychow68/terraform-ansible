@@ -3,7 +3,7 @@ terraform {
 }
 provider "aws" {
   profile = "default"
-  region  = var.region
+  region  = "${var.region}"
 }
 # ---------------------------------------------------------------------------------------------------------------------
 # S3 Bucket
@@ -90,8 +90,8 @@ resource "aws_autoscaling_group" "example" {
 # ---------------------------------------------------------------------------------------------------------------------
 resource "aws_launch_configuration" "ubuntu" {
   image_id           = var.amis[var.region]
-  instance_type = "t2.micro"
-  key_name      = "ec2-key-pair"
+  instance_type     = "t2.micro"
+  key_name          = "ec2-key-pair"
   # tags = {
   #   Name = "instance1"
   # }
