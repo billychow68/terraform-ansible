@@ -9,8 +9,8 @@ provider "aws" {
 # S3 Bucket
 # ---------------------------------------------------------------------------------------------------------------------
 resource "aws_s3_bucket" "bucket1" {
-  bucket  = "billychow68-bucket1"
-  acl     = "private"
+  bucket = "billychow68-bucket1"
+  acl    = "private"
   tags = {
     Name = "billychow68-bucket1"
   }
@@ -19,43 +19,43 @@ resource "aws_s3_bucket" "bucket1" {
 # resource: elb
 # ---------------------------------------------------------------------------------------------------------------------
 resource "aws_elb" "example" {
-  name = "terraform-asg-example"
+  name               = "terraform-asg-example"
   availability_zones = ["us-east-1a"]
 
   listener {
-    lb_port = 80
-    lb_protocol = "http"
-    instance_port = "${var.server_port}"
+    lb_port           = 80
+    lb_protocol       = "http"
+    instance_port     = "${var.server_port}"
     instance_protocol = "http"
   }
 
   health_check {
-    healthy_threshold = 2
+    healthy_threshold   = 2
     unhealthy_threshold = 2
-    timeout = 3
-    target = "HTTP:${var.server_port}/"
-    interval = 30
+    timeout             = 3
+    target              = "HTTP:${var.server_port}/"
+    interval            = 30
   }
 }
 # ---------------------------------------------------------------------------------------------------------------------
 # resource: security group for elastic_load_balancer
 # ---------------------------------------------------------------------------------------------------------------------
 resource "aws_security_group" "elb" {
-  name        = "terraform-example-elb"
+  name = "terraform-example-elb"
 
   # for inbound requests on port 80
   ingress {
-    from_port     = 80
-    to_port       = 80
-    protocol      = "tcp"
-    cidr_blocks   = ["0.0.0.0/0"]
+    from_port   = 80
+    to_port     = 80
+    protocol    = "tcp"
+    cidr_blocks = ["0.0.0.0/0"]
   }
 
   # for health check
   egress {
-    from_port = 0
-    to_port = 0
-    protocol = "-1"
+    from_port   = 0
+    to_port     = 0
+    protocol    = "-1"
     cidr_blocks = ["0.0.0.0/0"]
   }
   tags = {
@@ -73,15 +73,15 @@ resource "aws_autoscaling_group" "example" {
   #availability_zones = ["us-east-1a","us-east-1b","us-east-1c"]
   availability_zones = ["us-east-1a"]
 
-  load_balancers = ["${aws_elb.example.name}"]
+  load_balancers    = ["${aws_elb.example.name}"]
   health_check_type = "ELB"
 
   min_size = "${var.min_size}"
   max_size = "${var.max_size}"
 
   tag {
-    key = "Name"
-    value = "terraform_asg_example"
+    key                 = "Name"
+    value               = "terraform_asg_example"
     propagate_at_launch = true
   }
 }
@@ -89,9 +89,9 @@ resource "aws_autoscaling_group" "example" {
 # AWS launch configuration
 # ---------------------------------------------------------------------------------------------------------------------
 resource "aws_launch_configuration" "ubuntu" {
-  image_id           = var.amis[var.region]
-  instance_type     = "t2.micro"
-  key_name          = "ec2-key-pair"
+  image_id      = var.amis[var.region]
+  instance_type = "t2.micro"
+  key_name      = "ec2-key-pair"
   # tags = {
   #   Name = "instance1"
   # }
@@ -101,10 +101,10 @@ resource "aws_launch_configuration" "ubuntu" {
               echo "Hello, World" > index.html
               nohup busybox httpd -f -p 8080 &
               EOF
-  security_groups  = ["${aws_security_group.training-app.name}"]
+  security_groups = ["${aws_security_group.training-app.name}"]
   #vpc_security_group_ids = ["${aws_security_group.training.id}"]
   # explicit dependency
-  depends_on    = [aws_s3_bucket.bucket1]
+  depends_on = [aws_s3_bucket.bucket1]
   lifecycle {
     create_before_destroy = true
   }
@@ -113,18 +113,18 @@ resource "aws_launch_configuration" "ubuntu" {
 # resource: security group for EC2 instances
 # ---------------------------------------------------------------------------------------------------------------------
 resource "aws_security_group" "training-app" {
-  name        = "training-app"
+  name = "training-app"
   ingress {
-    from_port     = "${var.ssh_port}"
-    to_port       = "${var.ssh_port}"
-    protocol      = "tcp"
-    cidr_blocks   = ["0.0.0.0/0"]
+    from_port = "${var.ssh_port}"
+    to_port = "${var.ssh_port}"
+    protocol = "tcp"
+    cidr_blocks = ["0.0.0.0/0"]
   }
   ingress {
-    from_port     = "${var.server_port}"
-    to_port       = "${var.server_port}"
-    protocol      = "tcp"
-    cidr_blocks   = ["0.0.0.0/0"]
+    from_port = "${var.server_port}"
+    to_port = "${var.server_port}"
+    protocol = "tcp"
+    cidr_blocks = ["0.0.0.0/0"]
   }
   tags = {
     Name = "training-app"
